@@ -1,104 +1,72 @@
+import React, { useState } from "react";
+import TopNavbar from "./components/TopNavbar";
+import MainNavbar from "./components/MainNavbar";
+import ProductHeader from "./components/ProductHeader";
+import ProductList from "./components/Productlist";
+import Checkout from "./components/Checkout";
+
 function App() {
+  const [selectedProducts, setSelectedProducts] = useState([]);
+
+  const handleCheckboxChange = (product, isChecked) => {
+    if (isChecked) {
+      setSelectedProducts([...selectedProducts, product]);
+    } else {
+      setSelectedProducts(
+        selectedProducts.filter((p) => p.name !== product.name)
+      );
+    }
+  };
+
+  const totalPrice = selectedProducts.reduce((total, product) => {
+    const price = Number(product.price.replace("₱", "").replace(",", ""));
+    return total + price * product.quantity;
+  }, 0);
+
   return (
     <div>
       <TopNavbar />
-      <MainNavbar />
       <div>
-        <Productheader />
+        <div>
+          <MainNavbar />
+        </div>
+        <ProductHeader />
       </div>
       <div>
-        <ProductList />
+        <ProductList
+          imageURL="/public/pictures/northbayou.webp"
+          name="NB North Bayou Monitor Arm"
+          price="₱759"
+          quantity={1}
+          onCheckboxChange={handleCheckboxChange}
+        />
+        <ProductList
+          imageURL="/public/pictures/7500f.webp"
+          name="AMD Ryzen 5 7500f Boxed Desktop"
+          price="₱10,599"
+          quantity={1}
+          onCheckboxChange={handleCheckboxChange}
+        />
+        <ProductList
+          imageURL="/public/pictures/thermal.webp"
+          name="Thermal Grizzly Kryosheet Grapene Pads"
+          price="₱1,145"
+          quantity={1}
+          onCheckboxChange={handleCheckboxChange}
+        />
+        <ProductList 
+          imageURL="/public/pictures/ttairflex.webp"
+          name="TT airflex Ergochair Home Office Mesh chair"
+          price="₱9,599"
+          quantity={1}
+          onCheckboxChange={handleCheckboxChange}
+        />
+
+
       </div>
+      {selectedProducts.length > 0 && <Checkout totalPrice={totalPrice} />}
     </div>
   );
 }
-
-function TopNavbar() {
-  return (
-    <div className="top-navbar">
-      <div className="top-nav-container">
-        
-        {/* Left Links */}
-        <div className="top-left">
-          <a >Seller Centre</a>
-          <a >Start Selling</a>
-          <a >Download</a>
-          <span>Follow us on</span>
-          <span className="social-icons">📘 📷</span>
-        </div>
-
-        {/* Right Side (Icons & User) */}
-        <div className="top-right">
-          <div>
-          </div>
-          <span className="username">FunkyHorns</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Product(){
-  return(
-    <div className="main-post">
-      <Product
-      imageURL="/pictures/shoppee.png" 
-      />
-    </div>
-  )
-}
-
-function MainNavbar() {
-  return (
-    <nav className="main-navbar">
-      <div className="main-nav-container">
-        <div className="logo-section">
-          <img src="/pictures/shopee.png" alt="Shopee Logo" className="logo" />
-          <span className="checkout-text">Shopping Cart</span>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function Productheader() {
-  return (
-    <div className="container">
-      <div className="header-row">
-        <div className="header-column product-column">
-          <input type="checkbox" className="product-checkbox" />
-          Product
-        </div>
-        <div className="header-column">Unit Price</div>
-        <div className="header-column">Quantity</div>
-        <div className="header-column">Total Price</div>
-        <div className="header-column">Actions</div>
-      </div>
-    </div>
-  );
-}
-
-function ProductList(props) {
-  return (
-    <div className="container">
-      <div className="product-row">
-        <div className="product-column">
-          <input type="checkbox" className="product-checkbox" />
-          <img src={props.imageURL} alt="Product" className="product-image" />
-          <span>NB North Bayou Monitor Arm</span>
-        </div>
-        <div className="header-column">₱769</div>
-        <div className="header-column">
-          <button>-</button> 1 <button>+</button>
-        </div>
-        <div className="header-column">₱769</div>
-        <div className="header-column">
-          <button>Delete</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-  
 
 export default App;
