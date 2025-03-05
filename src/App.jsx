@@ -11,16 +11,20 @@ function App() {
   const handleCheckboxChange = (product, isChecked) => {
     if (isChecked) {
       setSelectedProducts((prevSelectedProducts) => {
+        // Check if the product already exists in the selected products
         const existingProduct = prevSelectedProducts.find((p) => p.name === product.name);
         if (existingProduct) {
+          // Update the quantity of the existing product
           return prevSelectedProducts.map((p) =>
             p.name === product.name ? { ...p, quantity: product.quantity } : p
           );
         } else {
+          // Add the new product to the selected products
           return [...prevSelectedProducts, product];
         }
       });
     } else {
+      // Remove the product from the selected products
       setSelectedProducts((prevSelectedProducts) =>
         prevSelectedProducts.filter((p) => p.name !== product.name)
       );
@@ -76,4 +80,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
