@@ -1,16 +1,8 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from "react";
 
 function ProductList(props) {
   const [quantity, setQuantity] = useState(Number(props.quantity));
   const [isChecked, setIsChecked] = useState(false);
-
-  const handleIncrease = () => {
-    setQuantity(prevQuantity => prevQuantity + 1);
-  };
-
-  const handleDecrease = () => {
-    setQuantity(prevQuantity => prevQuantity - 1);
-  };
 
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
@@ -18,13 +10,26 @@ function ProductList(props) {
     props.onCheckboxChange({ ...props, quantity }, checked);
   };
 
-  const price = Number(props.price.replace('₱', '').replace(',', ''));
+  useEffect(() => {
+    if (isChecked) {
+      props.onCheckboxChange({ ...props, quantity }, true);
+    }
+  }, [quantity]);
 
+  const handleIncrease = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+
+  const handleDecrease = () => {
+    setQuantity((prevQuantity) => prevQuantity - 1);
+  };
+
+  const price = Number(props.price.replace("₱", "").replace(",", ""));
   const totalprice = price * quantity;
 
   const deleteItem = () => {
     setQuantity(0);
-  }
+  };
 
   if (quantity < 1) {
     return null;
@@ -34,25 +39,27 @@ function ProductList(props) {
     <div className="container">
       <div className="product-row">
         <div className="product-column">
-          <input 
-            type="checkbox" 
-            className="product-checkbox" 
-            checked={isChecked} 
-            onChange={handleCheckboxChange} 
+          <input
+            type="checkbox"
+            className="product-checkbox"
+            checked={isChecked}
+            onChange={handleCheckboxChange}
           />
           <img src={props.imageURL} alt="Product" className="product-image" />
           <span>{props.name}</span>
         </div>
         <div className="header-column">₱{price.toLocaleString()}</div>
         <div className="header-column">
-          <button onClick={handleDecrease}>-</button> {quantity} <button onClick={handleIncrease}>+</button>
+          <button onClick={handleDecrease}>-</button> {quantity}{" "}
+          <button onClick={handleIncrease}>+</button>
         </div>
         <div className="header-column">₱{totalprice.toLocaleString()}</div>
         <div className="header-column">
-          <button onClick={deleteItem}>Delete</button>
+          <button className="deleteButton" onClick={deleteItem}>
+            Delete
+          </button>
         </div>
       </div>
-      
     </div>
   );
 }

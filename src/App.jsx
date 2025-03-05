@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import TopNavbar from "./components/TopNavbar";
 import MainNavbar from "./components/MainNavbar";
 import ProductHeader from "./components/ProductHeader";
@@ -10,10 +10,19 @@ function App() {
 
   const handleCheckboxChange = (product, isChecked) => {
     if (isChecked) {
-      setSelectedProducts([...selectedProducts, product]);
+      setSelectedProducts((prevSelectedProducts) => {
+        const existingProduct = prevSelectedProducts.find((p) => p.name === product.name);
+        if (existingProduct) {
+          return prevSelectedProducts.map((p) =>
+            p.name === product.name ? { ...p, quantity: product.quantity } : p
+          );
+        } else {
+          return [...prevSelectedProducts, product];
+        }
+      });
     } else {
-      setSelectedProducts(
-        selectedProducts.filter((p) => p.name !== product.name)
+      setSelectedProducts((prevSelectedProducts) =>
+        prevSelectedProducts.filter((p) => p.name !== product.name)
       );
     }
   };
@@ -61,12 +70,10 @@ function App() {
           quantity={1}
           onCheckboxChange={handleCheckboxChange}
         />
-
-
       </div>
       {selectedProducts.length > 0 && <Checkout totalPrice={totalPrice} />}
     </div>
   );
 }
 
-export default App;
+export default App; 
